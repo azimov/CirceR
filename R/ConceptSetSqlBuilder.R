@@ -48,5 +48,10 @@ buildConceptSetQuery.circe_backend_python <- function(conceptSetJSON) {
      stop("conceptSetJSON must be a single non-zero length string.")
    }
    circe <- ensurePythonBackend()
-   return(circe$build_concept_set_query(conceptSetJSON))
+   builder <- circe$vocabulary$concept_set_expression_query_builder$ConceptSetExpressionQueryBuilder()
+   expression <- conceptSetExpressionFromJson(conceptSetJSON)
+   if (is.null(expression$items)) {
+     stop("conceptSetJSON must contain an 'items' array.")
+   }
+   return(builder$build_expression_query(expression))
 }

@@ -7,7 +7,7 @@
 ensurePythonBackend()
 }
 \value{
-The 'circepy' module.
+The 'circe' module (from the ohdsi-circepy package).
 }
 \description{
 Ensures the Python backend is available

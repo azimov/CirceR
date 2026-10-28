@@ -49,7 +49,12 @@ cohortPrintFriendly.circe_backend_java <- function(expression) {
 #' @export
 cohortPrintFriendly.circe_backend_python <- function(expression) {
   circe <- ensurePythonBackend()
-  # In Python, cohort_print_friendly handles both CohortExpression objects and JSON strings
+  if (is.list(expression) && !inherits(expression, "python.builtin.object")) {
+    expression <- RJSONIO::toJSON(expression)
+  }
+  if (is.character(expression)) {
+    expression <- circe$cohort_expression_from_json(expression)
+  }
   return(circe$cohort_print_friendly(expression))
 }
 
@@ -94,7 +99,7 @@ conceptSetListPrintFriendly.circe_backend_java <- function(conceptSetList) {
 #' @export
 conceptSetListPrintFriendly.circe_backend_python <- function(conceptSetList) {
   circe <- ensurePythonBackend()
-  renderer <- circe$MarkdownRender()
+  renderer <- circe$cohortdefinition$MarkdownRender()
   
   if (is.list(conceptSetList) && !is.character(conceptSetList)) {
     # If it's an R list, convert to JSON for the Python side to handle uniformly
@@ -137,7 +142,7 @@ conceptSetPrintFriendly.circe_backend_java <- function(conceptSet) {
 #' @export
 conceptSetPrintFriendly.circe_backend_python <- function(conceptSet) {
   circe <- ensurePythonBackend()
-  renderer <- circe$MarkdownRender()
+  renderer <- circe$cohortdefinition$MarkdownRender()
   
   if (is.list(conceptSet) && !is.character(conceptSet)) {
     conceptSet <- RJSONIO::toJSON(conceptSet)

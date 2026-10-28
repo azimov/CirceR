@@ -46,5 +46,19 @@ test_that("ensureJavaBackend throws error when Java is missing and backend is no
   # If we want to test the failure, we'd need to mock requireNamespace.
   # Since we don't have a mocking library, we will test safety: logic shouldn't crash.
   
-  expect_error(ensureJavaBackend(), NA) # Should not error if Java is present
+  expect_error(CirceR:::ensureJavaBackend(), NA) # Should not error if Java is present
+})
+
+test_that("Python backend generates cohort SQL", {
+  skip_if_not_installed("reticulate")
+  skip_if_not(reticulate::py_module_available("circe"))
+  enablePythonBackend()
+  on.exit(Sys.unsetenv("CIRCER_BACKEND"))
+
+  cohortJson <- paste(readLines("resources/simpleCohort.json"), collapse = "\n")
+  options <- createGenerateOptions(
+    cohortId = 1, cdmSchema = "cdm", targetTable = "cohort", resultSchema = "results"
+  )
+  sql <- buildCohortQuery(cohortExpressionFromJson(cohortJson), options)
+  expect_true(nchar(sql) > 0)
 })

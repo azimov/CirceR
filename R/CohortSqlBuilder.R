@@ -94,5 +94,22 @@ buildCohortQuery.circe_backend_java <- function(expression, options) {
 #' @export
 buildCohortQuery.circe_backend_python <- function(expression, options) {
   circe <- ensurePythonBackend()
-  return(circe$build_cohort_query(expression, options))
+
+  if (is.list(expression) && !inherits(expression, "python.builtin.object")) {
+    expression <- RJSONIO::toJSON(expression)
+  }
+  if (is.character(expression)) {
+    expression <- circe$cohort_expression_from_json(expression)
+  }
+
+  pyOptions <- circe$cohortdefinition$BuildExpressionQueryOptions()
+  if (!is.null(options$cohortIdFieldName)) pyOptions$cohort_id_field_name <- options$cohortIdFieldName
+  if (!is.null(options$cohortId)) pyOptions$cohort_id <- as.integer(options$cohortId)
+  if (!is.null(options$cdmSchema)) pyOptions$cdm_schema <- options$cdmSchema
+  if (!is.null(options$targetTable)) pyOptions$target_table <- options$targetTable
+  if (!is.null(options$resultSchema)) pyOptions$result_schema <- options$resultSchema
+  if (!is.null(options$vocabularySchema)) pyOptions$vocabulary_schema <- options$vocabularySchema
+  if (!is.null(options$generateStats)) pyOptions$generate_stats <- isTRUE(options$generateStats)
+
+  return(circe$build_cohort_query(expression, pyOptions))
 }

@@ -59,7 +59,7 @@ jobs:
           python-version: '3.10'
 
       - name: Install Python dependencies
-        run: pip install ohdsi-circe-python-alpha
+        run: pip install ohdsi-circepy==0.3.0
 
       - name: Query dependencies
         run: |

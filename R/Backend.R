@@ -22,17 +22,17 @@ enablePythonBackend <- function() {
 #' Ensures the Python backend is available
 #'
 #' @return
-#' The 'circepy' module.
+#' The 'circe' module (from the ohdsi-circepy package).
 #'
 #' @keywords internal
 ensurePythonBackend <- function() {
   if (!requireNamespace("reticulate", quietly = TRUE)) {
     stop("Package 'reticulate' is required for the Python backend. Please install it.")
   }
-  if (!reticulate::py_module_available("circepy")) {
-    stop("Python module 'circepy' is required. Please install with `pip install ohdsi-circe-python-alpha`.")
+  if (!reticulate::py_module_available("circe")) {
+    stop("Python module 'circe' is required. Please install with `pip install ohdsi-circepy`.")
   }
-  return(reticulate::import("circepy"))
+  return(reticulate::import("circe"))
 }
 
 #' Ensures the Java backend is available

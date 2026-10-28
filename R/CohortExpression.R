@@ -40,5 +40,9 @@ cohortExpressionFromJson.circe_backend_java <- function(expressionJson) {
 
 #' @export
 cohortExpressionFromJson.circe_backend_python <- function(expressionJson) {
-  return(expressionJson)
+  circe <- ensurePythonBackend()
+  # Validate with circe, but return an R list so Java-style access such as
+  # `$conceptSets` keeps working for callers that inspect the expression.
+  circe$cohort_expression_from_json(expressionJson)
+  return(RJSONIO::fromJSON(expressionJson))
 }

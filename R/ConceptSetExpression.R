@@ -40,5 +40,6 @@ conceptSetExpressionFromJson.circe_backend_java <- function(expressionJson) {
 
 #' @export
 conceptSetExpressionFromJson.circe_backend_python <- function(expressionJson) {
-  return(expressionJson)
+  circe <- ensurePythonBackend()
+  return(circe$vocabulary$ConceptSetExpression$model_validate_json(expressionJson))
 }
